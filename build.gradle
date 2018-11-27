@@ -1,0 +1,48 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'anishk.teamratings'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	jcenter()
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
+}
+
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-integration')
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.0.1'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.2.Final'
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+    compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
+	runtimeOnly('org.postgresql:postgresql')
+	compileOnly('org.projectlombok:lombok')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
