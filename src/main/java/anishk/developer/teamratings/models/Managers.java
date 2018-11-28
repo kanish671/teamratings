@@ -22,7 +22,7 @@ public class Managers {
 
     @Id
     @Column(name = "managerid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer managerId;
 
     @Column(name = "teamid", nullable = false)

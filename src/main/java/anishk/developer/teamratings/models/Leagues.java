@@ -19,7 +19,7 @@ public class Leagues {
 
     @Id
     @Column(name = "leagueid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer leagueId;
 
     @Column(name = "name", nullable = false)

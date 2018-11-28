@@ -12,4 +12,6 @@ public interface URLPath {
     String GET_PLAYER_RATING = "/getplayerrating";
     String GET_MANAGER_RATING = "/getmanagerrating";
     String GET_REFEREE_RATING = "/getrefereerating";
+
+    String GET_TEAM_RATINGS_BETWEEN_DATES = "/getteamratingsbetweendates";
 }

@@ -22,7 +22,7 @@ public class Referees {
 
     @Id
     @Column(name = "refereeid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer refereeId;
 
     @Column(name = "leagueid", nullable = false)

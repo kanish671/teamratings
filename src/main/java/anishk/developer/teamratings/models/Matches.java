@@ -23,8 +23,8 @@ public class Matches {
 
     @Id
     @Column(name = "matchid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer matchId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long matchId;
 
     @Column(name = "seasonid", nullable = false)
     private Integer seasonId;

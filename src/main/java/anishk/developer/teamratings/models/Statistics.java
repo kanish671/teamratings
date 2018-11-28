@@ -21,7 +21,7 @@ public class Statistics {
 
     @Id
     @Column(name = "statisticid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statisticId;
 
     @Column(name = "playerid", nullable = false)

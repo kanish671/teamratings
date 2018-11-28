@@ -20,7 +20,7 @@ public class Seasons {
 
     @Id
     @Column(name = "seasonid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer seasonId;
 
     @Column(name = "season", nullable = false)

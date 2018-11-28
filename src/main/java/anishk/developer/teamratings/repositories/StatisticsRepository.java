@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics, Long> {
     Statistics findByPlayerIdAndMatchId(Long playerId, Long matchId);
-    List<Statistics> findAllByPlayerId();
+    List<Statistics> findAllByPlayerId(Long playerId);
 }

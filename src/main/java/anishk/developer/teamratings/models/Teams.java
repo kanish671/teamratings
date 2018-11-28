@@ -20,7 +20,7 @@ public class Teams {
 
     @Id
     @Column(name = "teamid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer teamId;
 
     @Column(name = "name", nullable = false)

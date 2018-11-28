@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class TeamRatingsRequestInput {
-    private Integer matchId;
+
+    private Long matchId;
     private Integer teamId;
     private Integer rating;
 }

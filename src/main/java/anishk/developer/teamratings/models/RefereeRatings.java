@@ -24,7 +24,7 @@ public class RefereeRatings {
 
     @Id
     @Column(name = "ratingid")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
 
     @Column(name = "matchid", nullable = false)

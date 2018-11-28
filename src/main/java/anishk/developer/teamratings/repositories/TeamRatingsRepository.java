@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TeamRatingsRepository extends JpaRepository<TeamRatings, Long> {
-    List<TeamRatings> findAllByMatchIdAndTeamId(Long matchId, Integer teamId);
+    List<TeamRatings> findAllByTeamIdAndMatchId(Integer teamId, Long matchId);
 }
