@@ -3,7 +3,7 @@ package anishk.developer.teamratings.controllers;
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
 import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
-import anishk.developer.teamratings.dto.TeamRatingsRequestInput;
+import anishk.developer.teamratings.dto.TeamRatingRequestInput;
 import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.ITeamRatingsService;
 import anishk.developer.teamratings.utils.ValidatorUtils;
@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping(path = URLPath.RATINGS_CONTROLLER_URL)
+@RequestMapping(path = URLPath.RATINGS_CONTROLLER_URL + URLPath.TEAM)
 public class TeamRatingsRestController {
 
     private ITeamRatingsService teamRatingsService;
@@ -37,10 +37,10 @@ public class TeamRatingsRestController {
     @ApiOperation(value = "saveTeamRating", notes = "Submits rating for a team for a match")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Team Rating Saved Successfully", response = Response.class)})
-    @PostMapping(path = URLPath.SAVE_TEAM_RATING)
-    public ResponseEntity<Response<String>> saveTeamRating(@Valid @RequestBody TeamRatingsRequestInput teamRatingsRequestInput) {
-        validatorUtils.validateTeamRatingRequestInput(teamRatingsRequestInput);
-        teamRatingsService.saveTeamRating(teamRatingsRequestInput);
+    @PostMapping(path = URLPath.SAVE_RATING)
+    public ResponseEntity<Response<String>> saveTeamRating(@Valid @RequestBody TeamRatingRequestInput teamRatingRequestInput) {
+        validatorUtils.validateTeamRatingRequestInput(teamRatingRequestInput);
+        teamRatingsService.saveTeamRating(teamRatingRequestInput);
         Response<String> apiResponse = Response.<String>builder().responseObj("Team Rating Saved Successfully").build();
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
@@ -48,7 +48,7 @@ public class TeamRatingsRestController {
     @ApiOperation(value = "getTeamRatingByMatch", notes = "Gets average rating for a team for a match")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Team Rating Retrieved Successfully", response = Response.class)})
-    @GetMapping(path = URLPath.GET_TEAM_RATING)
+    @GetMapping(path = URLPath.GET_RATING)
     public ResponseEntity<Response<TeamRatingByMatchOutput>> getTeamRatingByMatch(@Valid @RequestParam(value = "teamId"
     ) Integer teamId, @Valid @RequestParam(value = "matchId") Long matchId) {
         TeamRatingByMatchOutput teamRatingByMatchOutput = teamRatingsService.getTeamRatingByMatch(teamId, matchId);
@@ -57,12 +57,11 @@ public class TeamRatingsRestController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "getTeamRatingsBetweenDates", notes = "Gets average ratings of matches for a team in a league " +
-            "between two dates")
+    @ApiOperation(value = "getTeamRatingsBetweenDates", notes = "Gets average ratings of matches for a team between two dates")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Team ratings for the Dates Retrieved Successfully", response =
                     Response.class)})
-    @GetMapping(path = URLPath.GET_TEAM_RATINGS_BETWEEN_DATES)
+    @GetMapping(path = URLPath.GET_RATINGS_BETWEEN_DATES)
     public ResponseEntity<Response<TeamRatingsBetweenDatesOutput>> getTeamRatingsBetweenDates(@Valid @RequestParam(value = "teamId"
     ) Integer teamId, @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {

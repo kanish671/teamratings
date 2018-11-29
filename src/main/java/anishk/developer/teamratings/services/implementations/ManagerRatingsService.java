@@ -1,0 +1,125 @@
+package anishk.developer.teamratings.services.implementations;
+
+import anishk.developer.teamratings.assembler.Assembler;
+import anishk.developer.teamratings.dto.*;
+import anishk.developer.teamratings.models.*;
+import anishk.developer.teamratings.repositories.*;
+import anishk.developer.teamratings.services.interfaces.IManagerRatingsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Service("ManagerRatingsService")
+public class ManagerRatingsService implements IManagerRatingsService {
+    private static Logger logger = LoggerFactory.getLogger(ManagerRatingsService.class);
+
+    private Assembler assembler;
+    private ManagersRepository managersRepository;
+    private LeaguesRepository leaguesRepository;
+    private MatchesRepository matchesRepository;
+    private SeasonsRepository seasonsRepository;
+    private ManagerRatingsRepository managerRatingsRepository;
+
+    @Autowired
+    public ManagerRatingsService(Assembler assembler, ManagersRepository managersRepository,
+                              LeaguesRepository leaguesRepository, MatchesRepository matchesRepository,
+                              SeasonsRepository seasonsRepository, ManagerRatingsRepository managerRatingsRepository) {
+        this.assembler = assembler;
+        this.managersRepository = managersRepository;
+        this.leaguesRepository = leaguesRepository;
+        this.matchesRepository = matchesRepository;
+        this.seasonsRepository = seasonsRepository;
+        this.managerRatingsRepository = managerRatingsRepository;
+    }
+
+    @Override
+    @Transactional
+    public void saveManagerRating(ManagerRatingRequestInput managerRatingRequestInput) {
+        logger.info("Saving rating for managerId: {}, for matchId: {}, with rating: {}",
+                managerRatingRequestInput.getManagerId(),
+                managerRatingRequestInput.getMatchId(),
+                managerRatingRequestInput.getRating());
+
+        Manager manager = managersRepository.findByTeamId(managerRatingRequestInput.getManagerId());
+        Match match = matchesRepository.findByMatchId(managerRatingRequestInput.getMatchId());
+
+        if(manager != null && match != null) {
+            logger.debug("Manager and match exist... saving the rating");
+            manageManagerRating(managerRatingRequestInput);
+        } else {
+            throw new IllegalArgumentException("matchId or managerId doesn't match existing data");
+        }
+    }
+
+    @Override
+    public ManagerRatingByMatchOutput getManagerRatingByMatch(Integer managerId, Long matchId) {
+        logger.info("Getting team rating for managerId: {}, for matchId: {}", managerId, matchId);
+
+        Manager manager = managersRepository.findByManagerId(managerId);
+        Match match = matchesRepository.findByMatchId(matchId);
+
+        if(manager != null && match != null) {
+            logger.debug("Manager and match exist... getting the rating");
+            League league = leaguesRepository.findByLeagueId(match.getLeagueId());
+            Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
+            return assembler.populateManagerRatingByMatchOutput(manager, match, league, season,
+                    retrieveAverageManagerRatingByMatch(managerId, matchId));
+        } else {
+            throw new IllegalArgumentException("matchId or teamId doesn't match existing data");
+        }
+    }
+
+    @Override
+    public ManagerRatingsBetweenDatesOutput getManagerRatingsBetweenDates(Integer managerId, Date startDate,
+                                                                          Date endDate) {
+        logger.info("Getting team rating for managerId: {}, between dates startDate: {} and endDate: {}", managerId,
+                startDate, endDate);
+
+        Manager manager = managersRepository.findByManagerId(managerId);
+
+        if(manager != null) {
+            logger.debug("Manager exists... getting the ratings");
+            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(manager.getTeamId(), startDate,
+                    endDate);
+            List<RatingByMatch> managerRatingsByMatch = new ArrayList<>();
+            for (Match match : matches) {
+                managerRatingsByMatch.add(retrieveManagerRatingByMatch(managerId, match));
+            }
+            return assembler.populateManagerRatingsBetweenDatesOutput(manager, managerRatingsByMatch, startDate,
+                    endDate);
+        } else {
+            throw new IllegalArgumentException("teamId doesn't match existing data");
+        }
+    }
+
+    private void manageManagerRating(ManagerRatingRequestInput managerRatingRequestInput) {
+        ManagerRating managerRating = new ManagerRating();
+        managerRating.setMatchId(managerRatingRequestInput.getMatchId());
+        managerRating.setManagerId(managerRatingRequestInput.getManagerId());
+        managerRating.setRating(managerRatingRequestInput.getRating());
+        managerRatingsRepository.save(managerRating);
+    }
+
+    private Double retrieveAverageManagerRatingByMatch(Integer managerId, Long matchId) {
+        List<ManagerRating> managerRatings = managerRatingsRepository.findAllByManagerIdAndMatchId(managerId, matchId);
+        Double averageRating = (double) 0;
+        for (ManagerRating rating : managerRatings) {
+            averageRating = averageRating + rating.getRating();
+        }
+        averageRating = (double) Math.round(averageRating/managerRatings.size() * 100d)/100d;
+        return averageRating;
+    }
+
+    private RatingByMatch retrieveManagerRatingByMatch(Integer teamId, Match match) {
+        League league = leaguesRepository.findByLeagueId(match.getLeagueId());
+        Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
+        Double rating = retrieveAverageManagerRatingByMatch(teamId, match.getMatchId());
+        return assembler.populateRatingByMatch(match, league, season, rating);
+    }
+}

@@ -1,10 +1,10 @@
 package anishk.developer.teamratings.services.implementations;
 
 import anishk.developer.teamratings.assembler.Assembler;
-import anishk.developer.teamratings.dto.TeamRatingByMatch;
+import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
 import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
-import anishk.developer.teamratings.dto.TeamRatingsRequestInput;
+import anishk.developer.teamratings.dto.TeamRatingRequestInput;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.ITeamRatingsService;
@@ -44,18 +44,18 @@ public class TeamRatingsService implements ITeamRatingsService {
 
     @Override
     @Transactional
-    public void saveTeamRating(TeamRatingsRequestInput teamRatingsRequestInput) {
+    public void saveTeamRating(TeamRatingRequestInput teamRatingRequestInput) {
         logger.info("Saving rating for teamId: {}, for matchId: {}, with rating: {}",
-                teamRatingsRequestInput.getTeamId(),
-                teamRatingsRequestInput.getMatchId(),
-                teamRatingsRequestInput.getRating());
+                teamRatingRequestInput.getTeamId(),
+                teamRatingRequestInput.getMatchId(),
+                teamRatingRequestInput.getRating());
 
-        Teams team = teamsRepository.findByTeamId(teamRatingsRequestInput.getTeamId());
-        Matches match = matchesRepository.findByMatchId(teamRatingsRequestInput.getMatchId());
+        Team team = teamsRepository.findByTeamId(teamRatingRequestInput.getTeamId());
+        Match match = matchesRepository.findByMatchId(teamRatingRequestInput.getMatchId());
 
         if(team != null && match != null) {
             logger.debug("Team and match exist... saving the rating");
-            manageTeamRating(teamRatingsRequestInput);
+            manageTeamRating(teamRatingRequestInput);
         } else {
             throw new IllegalArgumentException("matchId or teamId doesn't match existing data");
         }
@@ -65,13 +65,13 @@ public class TeamRatingsService implements ITeamRatingsService {
     public TeamRatingByMatchOutput getTeamRatingByMatch(Integer teamId, Long matchId) {
         logger.info("Getting team rating for teamId: {}, for matchId: {}", teamId, matchId);
 
-        Teams team = teamsRepository.findByTeamId(teamId);
-        Matches match = matchesRepository.findByMatchId(matchId);
+        Team team = teamsRepository.findByTeamId(teamId);
+        Match match = matchesRepository.findByMatchId(matchId);
 
         if(team != null && match != null) {
             logger.debug("Team and match exist... getting the rating");
-            Leagues league = leaguesRepository.findByLeagueId(match.getLeagueId());
-            Seasons season = seasonsRepository.findBySeasonId(match.getSeasonId());
+            League league = leaguesRepository.findByLeagueId(match.getLeagueId());
+            Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
             return assembler.populateTeamRatingByMatchOutput(team, match, league, season,
                     retrieveAverageTeamRatingByMatch(teamId, matchId));
         } else {
@@ -84,13 +84,13 @@ public class TeamRatingsService implements ITeamRatingsService {
         logger.info("Getting team rating for teamId: {}, between dates startDate: {} and endDate: {}", teamId,
                 startDate, endDate);
 
-        Teams team = teamsRepository.findByTeamId(teamId);
+        Team team = teamsRepository.findByTeamId(teamId);
 
         if(team != null) {
             logger.debug("Team exists... getting the ratings");
-            List<Matches> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(teamId, startDate, endDate);
-            List<TeamRatingByMatch> teamRatingsByMatch = new ArrayList<>();
-            for (Matches match : matches) {
+            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(teamId, startDate, endDate);
+            List<RatingByMatch> teamRatingsByMatch = new ArrayList<>();
+            for (Match match : matches) {
                 teamRatingsByMatch.add(retrieveTeamRatingByMatch(teamId, match));
             }
             return assembler.populateTeamRatingsBetweenDatesOutput(team, teamRatingsByMatch, startDate, endDate);
@@ -99,28 +99,28 @@ public class TeamRatingsService implements ITeamRatingsService {
         }
     }
 
-    private void manageTeamRating(TeamRatingsRequestInput teamRatingsRequestInput) {
-        TeamRatings teamRating = new TeamRatings();
-        teamRating.setMatchId(teamRatingsRequestInput.getMatchId());
-        teamRating.setTeamId(teamRatingsRequestInput.getTeamId());
-        teamRating.setRating(teamRatingsRequestInput.getRating());
+    private void manageTeamRating(TeamRatingRequestInput teamRatingRequestInput) {
+        TeamRating teamRating = new TeamRating();
+        teamRating.setMatchId(teamRatingRequestInput.getMatchId());
+        teamRating.setTeamId(teamRatingRequestInput.getTeamId());
+        teamRating.setRating(teamRatingRequestInput.getRating());
         teamRatingsRepository.save(teamRating);
     }
 
     private Double retrieveAverageTeamRatingByMatch(Integer teamId, Long matchId) {
-        List<TeamRatings> teamRatings = teamRatingsRepository.findAllByTeamIdAndMatchId(teamId, matchId);
+        List<TeamRating> teamRatings = teamRatingsRepository.findAllByTeamIdAndMatchId(teamId, matchId);
         Double averageRating = (double) 0;
-        for (TeamRatings rating : teamRatings) {
+        for (TeamRating rating : teamRatings) {
             averageRating = averageRating + rating.getRating();
         }
-        averageRating = (double)Math.round(averageRating/teamRatings.size() * 100d)/100d;
+        averageRating = (double) Math.round(averageRating/teamRatings.size() * 100d)/100d;
         return averageRating;
     }
 
-    private TeamRatingByMatch retrieveTeamRatingByMatch(Integer teamId, Matches match) {
-        Leagues league = leaguesRepository.findByLeagueId(match.getLeagueId());
-        Seasons season = seasonsRepository.findBySeasonId(match.getSeasonId());
+    private RatingByMatch retrieveTeamRatingByMatch(Integer teamId, Match match) {
+        League league = leaguesRepository.findByLeagueId(match.getLeagueId());
+        Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
         Double rating = retrieveAverageTeamRatingByMatch(teamId, match.getMatchId());
-        return assembler.populateTeamRatingByMatch(match, league, season, rating);
+        return assembler.populateRatingByMatch(match, league, season, rating);
     }
 }

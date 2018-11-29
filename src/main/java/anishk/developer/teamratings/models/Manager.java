@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Managers {
+public class Manager {
 
     @Id
     @Column(name = "managerid")

@@ -13,23 +13,23 @@ import javax.validation.constraints.Size;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "referees")
+@Table(name = "players")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Referees {
+public class Player {
 
     @Id
-    @Column(name = "refereeid")
+    @Column(name = "playerid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer refereeId;
+    private Long playerId;
 
-    @Column(name = "leagueid", nullable = false)
-    private Integer leagueId;
+    @Column(name = "teamid", nullable = false)
+    private Integer teamId;
 
     @Column(name = "name", nullable = false)
-    @Size(min = 3, max = 50, message = "Referee Name must be between 3 and 50 characters")
+    @Size(min = 3, max = 50, message = "Player Name must be between 3 and 50 characters")
     private String name;
 
     @Column(name = "country")
@@ -40,4 +40,9 @@ public class Referees {
     @Min(value = 0)
     @Max(value = 1)
     private Integer status;
+
+    @Column(name = "number", nullable = false)
+    @Min(value = 1)
+    @Max(value = 99)
+    private Integer number;
 }

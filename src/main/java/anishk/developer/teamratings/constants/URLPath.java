@@ -3,15 +3,14 @@ package anishk.developer.teamratings.constants;
 public interface URLPath {
     String RATINGS_CONTROLLER_URL = "/service/ratings";
 
-    String SAVE_TEAM_RATING = "/saveteamrating";
-    String SAVE_PLAYER_RATING = "/saveplayerrating";
-    String SAVE_MANAGER_RATING = "/savemanagerrating";
-    String SAVE_REFEREE_RATING = "/saverefereerating";
+    String TEAM = "/team";
+    String PLAYER = "/player";
+    String MANAGER = "/manager";
+    String REFEREE = "/referee";
 
-    String GET_TEAM_RATING = "/getteamrating";
-    String GET_PLAYER_RATING = "/getplayerrating";
-    String GET_MANAGER_RATING = "/getmanagerrating";
-    String GET_REFEREE_RATING = "/getrefereerating";
+    String SAVE_RATING = "/saverating";
 
-    String GET_TEAM_RATINGS_BETWEEN_DATES = "/getteamratingsbetweendates";
+    String GET_RATING = "/getrating";
+
+    String GET_RATINGS_BETWEEN_DATES = "/getratingsbetweendates";
 }

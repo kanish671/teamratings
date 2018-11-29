@@ -1,6 +1,9 @@
 package anishk.developer.teamratings.utils;
 
-import anishk.developer.teamratings.dto.TeamRatingsRequestInput;
+import anishk.developer.teamratings.dto.ManagerRatingRequestInput;
+import anishk.developer.teamratings.dto.PlayerRatingRequestInput;
+import anishk.developer.teamratings.dto.RefereeRatingRequestInput;
+import anishk.developer.teamratings.dto.TeamRatingRequestInput;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -17,11 +20,38 @@ public class ValidatorUtils {
         this.dateUtils = dateUtils;
     }
 
-    public boolean validateTeamRatingRequestInput(TeamRatingsRequestInput teamRatingsRequestInput) {
-        if(longUtils.isNull(teamRatingsRequestInput.getMatchId())
-                || integerUtils.isNull(teamRatingsRequestInput.getTeamId())
-                || integerUtils.isNull(teamRatingsRequestInput.getRating())) {
+    public boolean validateTeamRatingRequestInput(TeamRatingRequestInput teamRatingRequestInput) {
+        if(longUtils.isNull(teamRatingRequestInput.getMatchId())
+                || integerUtils.isNull(teamRatingRequestInput.getTeamId())
+                || integerUtils.isNull(teamRatingRequestInput.getRating())) {
             throw new IllegalArgumentException("Invalid Request. One of matchid, teamid or rating was null");
+        }
+        return true;
+    }
+
+    public boolean validateManagerRatingRequestInput(ManagerRatingRequestInput managerRatingRequestInput) {
+        if(longUtils.isNull(managerRatingRequestInput.getMatchId())
+                || integerUtils.isNull(managerRatingRequestInput.getManagerId())
+                || integerUtils.isNull(managerRatingRequestInput.getRating())) {
+            throw new IllegalArgumentException("Invalid Request. One of matchid, managerid or rating was null");
+        }
+        return true;
+    }
+
+    public boolean validatePlayerRatingRequestInput(PlayerRatingRequestInput playerRatingRequestInput) {
+        if(longUtils.isNull(playerRatingRequestInput.getMatchId())
+                || longUtils.isNull(playerRatingRequestInput.getPlayerId())
+                || integerUtils.isNull(playerRatingRequestInput.getRating())) {
+            throw new IllegalArgumentException("Invalid Request. One of matchid, playerid or rating was null");
+        }
+        return true;
+    }
+
+    public boolean validateRefereeRatingRequestInput(RefereeRatingRequestInput refereeRatingRequestInput) {
+        if(longUtils.isNull(refereeRatingRequestInput.getMatchId())
+                || integerUtils.isNull(refereeRatingRequestInput.getRefereeId())
+                || integerUtils.isNull(refereeRatingRequestInput.getRating())) {
+            throw new IllegalArgumentException("Invalid Request. One of matchid, refereeid or rating was null");
         }
         return true;
     }

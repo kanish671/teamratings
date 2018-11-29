@@ -20,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RefereeRatings {
+public class RefereeRating {
 
     @Id
     @Column(name = "ratingid")

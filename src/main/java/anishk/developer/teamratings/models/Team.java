@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Teams {
+public class Team {
 
     @Id
     @Column(name = "teamid")

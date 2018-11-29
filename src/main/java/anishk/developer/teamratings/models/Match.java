@@ -19,7 +19,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Matches {
+public class Match {
 
     @Id
     @Column(name = "matchid")
@@ -34,6 +34,9 @@ public class Matches {
 
     @Column(name = "teamid", nullable = false)
     private Integer teamId;
+
+    @Column(name = "refereeid", nullable = false)
+    private Integer refereeId;
 
     @Column(name = "fixturedate", nullable = false, updatable = false)
     @Temporal(TemporalType.DATE)

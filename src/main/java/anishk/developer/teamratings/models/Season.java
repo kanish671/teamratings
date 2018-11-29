@@ -11,18 +11,19 @@ import javax.validation.constraints.Size;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "leagues")
+@Table(name = "seasons")
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Leagues {
+public class Season {
 
     @Id
-    @Column(name = "leagueid")
+    @Column(name = "seasonid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer leagueId;
+    private Integer seasonId;
 
-    @Column(name = "name", nullable = false)
-    @Size(min = 3, max = 50, message = "League Name must be between 3 and 50 characters")
-    private String name;
+    @Column(name = "season", nullable = false)
+    @Size(min = 4, max = 20, message = "Season must be between 4 and 20 characters")
+    private String season;
 }

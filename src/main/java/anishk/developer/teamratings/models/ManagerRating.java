@@ -15,11 +15,12 @@ import java.util.Date;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "teamratings")
+@Table(name = "managerratings")
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class TeamRatings {
+public class ManagerRating {
 
     @Id
     @Column(name = "ratingid")
@@ -29,8 +30,8 @@ public class TeamRatings {
     @Column(name = "matchid", nullable = false)
     private Long matchId;
 
-    @Column(name = "teamid", nullable = false)
-    private Integer teamId;
+    @Column(name = "managerid", nullable = false)
+    private Integer managerId;
 
     @Column(name = "rating", nullable = false)
     @Min(value = 0, message = "Rating must be between 0 and 10")
