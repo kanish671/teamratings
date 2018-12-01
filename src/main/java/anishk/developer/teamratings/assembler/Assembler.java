@@ -17,19 +17,37 @@ public class Assembler {
     @Autowired
     public Assembler(Mapper mapper) { this.mapper = mapper; }
 
+    public MatchRatingsOutput populateMatchRatingsOutput(Match match, League league, Season season,
+                                                         MatchRatingTeamOutput teamRating,
+                                                         MatchRatingManagerOutput managerRating,
+                                                         MatchRatingRefereeOutput refereeRating,
+                                                         List<MatchRatingPlayerOutput> playerRatings) {
+        MatchRatingsOutput matchRatingsOutput = new MatchRatingsOutput();
+        matchRatingsOutput.setMatch(match);
+        matchRatingsOutput.setLeague(league);
+        matchRatingsOutput.setSeason(season);
+        matchRatingsOutput.setTeamRating(teamRating);
+        matchRatingsOutput.setManagerRating(managerRating);
+        matchRatingsOutput.setRefereeRating(refereeRating);
+        matchRatingsOutput.setPlayerRatings(playerRatings);
+        return matchRatingsOutput;
+    }
+
     public TeamRatingByMatchOutput populateTeamRatingByMatchOutput(Team team, Match match, League league,
-                                                                   Season season, Double rating) {
+                                                                   Season season, Referee referee, Double rating) {
         TeamRatingByMatchOutput teamRatingByMatchOutput = new TeamRatingByMatchOutput();
         teamRatingByMatchOutput.setTeam(team);
         teamRatingByMatchOutput.setMatch(match);
         teamRatingByMatchOutput.setLeague(league);
         teamRatingByMatchOutput.setSeason(season);
+        teamRatingByMatchOutput.setReferee(referee);
         teamRatingByMatchOutput.setRating(rating);
         return teamRatingByMatchOutput;
     }
 
     public TeamRatingsBetweenDatesOutput populateTeamRatingsBetweenDatesOutput(Team team,
-                                                                               List<RatingByMatch> teamRatingsByMatch, Date startDate, Date endDate) {
+                                                                               List<RatingByMatch> teamRatingsByMatch,
+                                                                               Date startDate, Date endDate) {
         TeamRatingsBetweenDatesOutput teamRatingsBetweenDatesOutput = new TeamRatingsBetweenDatesOutput();
         teamRatingsBetweenDatesOutput.setTeam(team);
         teamRatingsBetweenDatesOutput.setRatingsByMatch(teamRatingsByMatch);
@@ -49,11 +67,12 @@ public class Assembler {
         return managerRatingByMatchOutput;
     }
 
-    public ManagerRatingsBetweenDatesOutput populateManagerRatingsBetweenDatesOutput(Manager manager,
-                        List<RatingByMatch> teamRatingsByMatch, Date startDate, Date endDate) {
+    public ManagerRatingsBetweenDatesOutput populateManagerRatingsBetweenDatesOutput(Manager manager, Team team,
+                        List<RatingByMatch> managerRatingsByMatch, Date startDate, Date endDate) {
         ManagerRatingsBetweenDatesOutput managerRatingsBetweenDatesOutput = new ManagerRatingsBetweenDatesOutput();
         managerRatingsBetweenDatesOutput.setManager(manager);
-        managerRatingsBetweenDatesOutput.setRatingsByMatch(teamRatingsByMatch);
+        managerRatingsBetweenDatesOutput.setTeam(team);
+        managerRatingsBetweenDatesOutput.setRatingsByMatch(managerRatingsByMatch);
         managerRatingsBetweenDatesOutput.setStartDate(startDate);
         managerRatingsBetweenDatesOutput.setEndDate(endDate);
         return managerRatingsBetweenDatesOutput;
@@ -71,7 +90,8 @@ public class Assembler {
     }
 
     public PlayerRatingsBetweenDatesOutput populatePlayerRatingsBetweenDatesOutput(Player player,
-                                                                                   List<RatingByMatch> playerRatingsByMatch, Date startDate, Date endDate) {
+                                                                                   List<RatingByMatch> playerRatingsByMatch,
+                                                                                   Date startDate, Date endDate) {
         PlayerRatingsBetweenDatesOutput playerRatingsBetweenDatesOutput = new PlayerRatingsBetweenDatesOutput();
         playerRatingsBetweenDatesOutput.setPlayer(player);
         playerRatingsBetweenDatesOutput.setRatingsByMatch(playerRatingsByMatch);
@@ -92,7 +112,8 @@ public class Assembler {
     }
 
     public RefereeRatingsBetweenDatesOutput populateRefereeRatingsBetweenDatesOutput(Referee referee,
-                                                                                     List<RatingByMatch> refereeRatingsByMatch, Date startDate, Date endDate) {
+                                                                                     List<RatingByMatch> refereeRatingsByMatch,
+                                                                                     Date startDate, Date endDate) {
         RefereeRatingsBetweenDatesOutput refereeRatingsBetweenDatesOutput = new RefereeRatingsBetweenDatesOutput();
         refereeRatingsBetweenDatesOutput.setReferee(referee);
         refereeRatingsBetweenDatesOutput.setRatingsByMatch(refereeRatingsByMatch);

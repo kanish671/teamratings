@@ -1,5 +1,6 @@
 package anishk.developer.teamratings.dto;
 
+import anishk.developer.teamratings.models.Referee;
 import anishk.developer.teamratings.models.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class TeamRatingByMatchOutput extends RatingByMatchOutput {
 
     private Team team;
+    private Referee referee;
 }

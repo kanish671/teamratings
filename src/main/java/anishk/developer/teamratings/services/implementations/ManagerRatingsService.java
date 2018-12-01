@@ -20,6 +20,7 @@ public class ManagerRatingsService implements IManagerRatingsService {
     private static Logger logger = LoggerFactory.getLogger(ManagerRatingsService.class);
 
     private Assembler assembler;
+    private TeamsRepository teamsRepository;
     private ManagersRepository managersRepository;
     private LeaguesRepository leaguesRepository;
     private MatchesRepository matchesRepository;
@@ -27,10 +28,12 @@ public class ManagerRatingsService implements IManagerRatingsService {
     private ManagerRatingsRepository managerRatingsRepository;
 
     @Autowired
-    public ManagerRatingsService(Assembler assembler, ManagersRepository managersRepository,
+    public ManagerRatingsService(Assembler assembler,
+                                 TeamsRepository teamsRepository, ManagersRepository managersRepository,
                               LeaguesRepository leaguesRepository, MatchesRepository matchesRepository,
                               SeasonsRepository seasonsRepository, ManagerRatingsRepository managerRatingsRepository) {
         this.assembler = assembler;
+        this.teamsRepository = teamsRepository;
         this.managersRepository = managersRepository;
         this.leaguesRepository = leaguesRepository;
         this.matchesRepository = matchesRepository;
@@ -71,7 +74,7 @@ public class ManagerRatingsService implements IManagerRatingsService {
             return assembler.populateManagerRatingByMatchOutput(manager, match, league, season,
                     retrieveAverageManagerRatingByMatch(managerId, matchId));
         } else {
-            throw new IllegalArgumentException("matchId or teamId doesn't match existing data");
+            throw new IllegalArgumentException("matchId or managerId doesn't match existing data");
         }
     }
 
@@ -82,8 +85,9 @@ public class ManagerRatingsService implements IManagerRatingsService {
                 startDate, endDate);
 
         Manager manager = managersRepository.findByManagerId(managerId);
+        Team team = teamsRepository.findByTeamId(manager.getTeamId());
 
-        if(manager != null) {
+        if(manager != null && team != null) {
             logger.debug("Manager exists... getting the ratings");
             List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(manager.getTeamId(), startDate,
                     endDate);
@@ -91,10 +95,10 @@ public class ManagerRatingsService implements IManagerRatingsService {
             for (Match match : matches) {
                 managerRatingsByMatch.add(retrieveManagerRatingByMatch(managerId, match));
             }
-            return assembler.populateManagerRatingsBetweenDatesOutput(manager, managerRatingsByMatch, startDate,
+            return assembler.populateManagerRatingsBetweenDatesOutput(manager, team, managerRatingsByMatch, startDate,
                     endDate);
         } else {
-            throw new IllegalArgumentException("teamId doesn't match existing data");
+            throw new IllegalArgumentException("managerId doesn't match existing data");
         }
     }
 
@@ -116,10 +120,10 @@ public class ManagerRatingsService implements IManagerRatingsService {
         return averageRating;
     }
 
-    private RatingByMatch retrieveManagerRatingByMatch(Integer teamId, Match match) {
+    private RatingByMatch retrieveManagerRatingByMatch(Integer managerId, Match match) {
         League league = leaguesRepository.findByLeagueId(match.getLeagueId());
         Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
-        Double rating = retrieveAverageManagerRatingByMatch(teamId, match.getMatchId());
+        Double rating = retrieveAverageManagerRatingByMatch(managerId, match.getMatchId());
         return assembler.populateRatingByMatch(match, league, season, rating);
     }
 }

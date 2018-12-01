@@ -28,17 +28,20 @@ public class TeamRatingsService implements ITeamRatingsService {
     private LeaguesRepository leaguesRepository;
     private MatchesRepository matchesRepository;
     private SeasonsRepository seasonsRepository;
+    private RefereesRepository refereesRepository;
     private TeamRatingsRepository teamRatingsRepository;
 
     @Autowired
     public TeamRatingsService(Assembler assembler, TeamsRepository teamsRepository,
                               LeaguesRepository leaguesRepository, MatchesRepository matchesRepository,
-                              SeasonsRepository seasonsRepository, TeamRatingsRepository teamRatingsRepository) {
+                              SeasonsRepository seasonsRepository, RefereesRepository refereesRepository,
+                              TeamRatingsRepository teamRatingsRepository) {
         this.assembler = assembler;
         this.teamsRepository = teamsRepository;
         this.leaguesRepository = leaguesRepository;
         this.matchesRepository = matchesRepository;
         this.seasonsRepository = seasonsRepository;
+        this.refereesRepository = refereesRepository;
         this.teamRatingsRepository = teamRatingsRepository;
     }
 
@@ -72,7 +75,8 @@ public class TeamRatingsService implements ITeamRatingsService {
             logger.debug("Team and match exist... getting the rating");
             League league = leaguesRepository.findByLeagueId(match.getLeagueId());
             Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
-            return assembler.populateTeamRatingByMatchOutput(team, match, league, season,
+            Referee referee = refereesRepository.findByRefereeId(match.getRefereeId());
+            return assembler.populateTeamRatingByMatchOutput(team, match, league, season, referee,
                     retrieveAverageTeamRatingByMatch(teamId, matchId));
         } else {
             throw new IllegalArgumentException("matchId or teamId doesn't match existing data");

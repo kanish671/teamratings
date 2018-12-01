@@ -7,6 +7,7 @@ public interface URLPath {
     String PLAYER = "/player";
     String MANAGER = "/manager";
     String REFEREE = "/referee";
+    String MATCH = "/match";
 
     String SAVE_RATING = "/saverating";
 
