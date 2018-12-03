@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,19 @@ public class MatchRatingsService implements IMatchRatingsService {
         this.managerRatingsService = managerRatingsService;
         this.playerRatingsService = playerRatingsService;
         this.refereeRatingsService = refereeRatingsService;
+    }
+
+    @Override
+    @Transactional
+    public void saveMatchRating(MatchRatingRequestInput matchRatingRequestInput) {
+        logger.info("Saving rating for matchId: {}", matchRatingRequestInput.getMatchId());
+
+        teamRatingsService.saveTeamRating(matchRatingRequestInput.getTeamRating());
+        managerRatingsService.saveManagerRating(matchRatingRequestInput.getManagerRating());
+        refereeRatingsService.saveRefereeRating(matchRatingRequestInput.getRefereeRating());
+        for(PlayerRatingRequestInput playerRating : matchRatingRequestInput.getPlayerRatings()) {
+            playerRatingsService.savePlayerRating(playerRating);
+        }
     }
 
     @Override

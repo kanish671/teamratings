@@ -45,6 +45,7 @@ public class TeamRatingsRestController {
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @ApiOperation(value = "getTeamRatingByMatch", notes = "Gets average rating for a team for a match")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Team Rating Retrieved Successfully", response = Response.class)})

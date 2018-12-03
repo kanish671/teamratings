@@ -1,6 +1,7 @@
 package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
+import anishk.developer.teamratings.dto.MatchRatingRequestInput;
 import anishk.developer.teamratings.dto.MatchRatingsOutput;
 import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
 import anishk.developer.teamratings.responses.Response;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,6 +30,18 @@ public class MatchRatingsRestController {
                                       ValidatorUtils validatorUtils) {
         this.matchRatingsService = matchRatingsService;
         this.validatorUtils = validatorUtils;
+    }
+
+    @ApiOperation(value = "saveMatchRatings", notes = "Saves all ratings for a match")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Match Ratings Saved Successfully", response = Response.class)})
+    @PostMapping(path = URLPath.SAVE_RATING)
+    public ResponseEntity<Response<String>> saveMatchRatings(@Valid @RequestBody MatchRatingRequestInput matchRatingRequestInput) {
+        validatorUtils.validateMatchRatingRequestInput(matchRatingRequestInput);
+        matchRatingsService.saveMatchRating(matchRatingRequestInput);
+        Response<String> apiResponse =
+                Response.<String>builder().responseObj("Match Ratings Saved Successfully").build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "getMatchRatings", notes = "Gets all ratings for a match")

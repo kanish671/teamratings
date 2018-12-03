@@ -1,12 +1,10 @@
 package anishk.developer.teamratings.utils;
 
-import anishk.developer.teamratings.dto.ManagerRatingRequestInput;
-import anishk.developer.teamratings.dto.PlayerRatingRequestInput;
-import anishk.developer.teamratings.dto.RefereeRatingRequestInput;
-import anishk.developer.teamratings.dto.TeamRatingRequestInput;
+import anishk.developer.teamratings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 public class ValidatorUtils {
     private IntegerUtils integerUtils;
@@ -52,6 +50,19 @@ public class ValidatorUtils {
                 || integerUtils.isNull(refereeRatingRequestInput.getRefereeId())
                 || integerUtils.isNull(refereeRatingRequestInput.getRating())) {
             throw new IllegalArgumentException("Invalid Request. One of matchid, refereeid or rating was null");
+        }
+        return true;
+    }
+
+    public boolean validateMatchRatingRequestInput(MatchRatingRequestInput matchRatingRequestInput) {
+        validateTeamRatingRequestInput(matchRatingRequestInput.getTeamRating());
+        validateManagerRatingRequestInput(matchRatingRequestInput.getManagerRating());
+        validateRefereeRatingRequestInput(matchRatingRequestInput.getRefereeRating());
+        for(PlayerRatingRequestInput playerRating : matchRatingRequestInput.getPlayerRatings()) {
+            validatePlayerRatingRequestInput(playerRating);
+        }
+        if(longUtils.isNull(matchRatingRequestInput.getMatchId())) {
+            throw new IllegalArgumentException("Invalid Request. matchid was null");
         }
         return true;
     }
