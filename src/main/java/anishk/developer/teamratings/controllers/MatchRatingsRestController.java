@@ -3,7 +3,6 @@ package anishk.developer.teamratings.controllers;
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.MatchRatingRequestInput;
 import anishk.developer.teamratings.dto.MatchRatingsOutput;
-import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
 import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IMatchRatingsService;
 import anishk.developer.teamratings.utils.ValidatorUtils;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = URLPath.RATINGS_CONTROLLER_URL + URLPath.MATCH)
+@RequestMapping(path = URLPath.RATINGS_CONTROLLER + URLPath.MATCH)
 public class MatchRatingsRestController {
 
     private IMatchRatingsService matchRatingsService;

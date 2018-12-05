@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping(path = URLPath.RATINGS_CONTROLLER_URL + URLPath.REFEREE)
+@RequestMapping(path = URLPath.RATINGS_CONTROLLER + URLPath.REFEREE)
 
 public class RefereeRatingsRestController {
 

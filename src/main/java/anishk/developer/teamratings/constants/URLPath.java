@@ -1,7 +1,8 @@
 package anishk.developer.teamratings.constants;
 
 public interface URLPath {
-    String RATINGS_CONTROLLER_URL = "/service/ratings";
+    String BASE_CONTROLLER = "/service";
+    String RATINGS_CONTROLLER = "/service/ratings";
 
     String TEAM = "/team";
     String PLAYER = "/player";
@@ -9,9 +10,8 @@ public interface URLPath {
     String REFEREE = "/referee";
     String MATCH = "/match";
 
+    String GET_ALL = "/getall";
     String SAVE_RATING = "/saverating";
-
     String GET_RATING = "/getrating";
-
     String GET_RATINGS_BETWEEN_DATES = "/getratingsbetweendates";
 }

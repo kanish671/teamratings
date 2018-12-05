@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping(path = URLPath.RATINGS_CONTROLLER_URL + URLPath.MANAGER)
+@RequestMapping(path = URLPath.RATINGS_CONTROLLER + URLPath.MANAGER)
 public class ManagerRatingsRestController {
 
     private IManagerRatingsService managerRatingsService;
