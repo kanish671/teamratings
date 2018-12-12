@@ -48,6 +48,9 @@ public class Match {
     @Column(name = "opponent", nullable = false)
     private String opponent;
 
+    @Column(name="opponentshortname", nullable = false)
+    private String opponentshortname;
+
     @Column(name = "result", nullable = false)
     @Size(min = 1, max = 1, message = "Result must be one of W, D or L")
     private Character result;
