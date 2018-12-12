@@ -64,7 +64,7 @@ public class PlayerRatingsRestController {
     @GetMapping(path = URLPath.GET_RATINGS_BETWEEN_DATES)
     public ResponseEntity<Response<PlayerRatingsBetweenDatesOutput>> getPlayerRatingsBetweenDates(@Valid @RequestParam(value = "playerId"
     ) Long playerId, @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                                                                                  @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+    @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         validatorUtils.validateStartDateAndEndDate(startDate, endDate);
         PlayerRatingsBetweenDatesOutput playerRatingsBetweenDatesOutput =
                 playerRatingsService.getPlayerRatingsBetweenDates(playerId, startDate, endDate);
