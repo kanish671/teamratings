@@ -89,7 +89,7 @@ public class ManagerRatingsService implements IManagerRatingsService {
 
         if(manager != null && team != null) {
             logger.debug("Manager exists... getting the ratings");
-            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(manager.getTeamId(), startDate,
+            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(manager.getTeamId(), startDate,
                     endDate);
             List<RatingByMatch> managerRatingsByMatch = new ArrayList<>();
             for (Match match : matches) {

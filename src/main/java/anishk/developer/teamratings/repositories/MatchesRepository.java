@@ -13,8 +13,10 @@ public interface MatchesRepository extends JpaRepository<Match, Long> {
     List<Match> findAllByTeamIdAndLeagueIdAndSeasonId(Integer teamId, Integer leagueId, Integer seasonId);
     Match findByTeamIdAndFixtureDate(Integer teamId, Date fixtureDate);
     Match findByMatchId(Long matchId);
-    List<Match> findAllByTeamIdAndFixtureDateBetween(Integer teamId, Date startDate, Date endDate);
+    List<Match> findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(Integer teamId, Date startDate, Date endDate);
     List<Match> findAllByRefereeIdAndFixtureDateBetween(Integer refereeId, Date startDate, Date endDate);
     @Query(value = "SELECT DISTINCT leagueid FROM matches WHERE teamid = ?1", nativeQuery = true)
     List<Integer> findDistinctLeaguesForTeam(Integer teamId);
+    @Query(value = "SELECT DISTINCT teamid FROM matches WHERE leagueid = ?1", nativeQuery = true)
+    List<Integer> findDistinctTeamsForLeague(Integer leagueId);
 }

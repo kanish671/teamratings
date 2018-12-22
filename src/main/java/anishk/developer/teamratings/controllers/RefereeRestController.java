@@ -2,9 +2,7 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.RefereesOutput;
-import anishk.developer.teamratings.dto.TeamsOutput;
 import anishk.developer.teamratings.models.Referee;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IRefereeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -33,21 +31,19 @@ public class RefereeRestController {
 
     @ApiOperation(value = "getAllReferees", notes = "Gets all Referees")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Referees Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Referees Retrieved Successfully", response = RefereesOutput.class)})
     @GetMapping(path = URLPath.GET_ALL)
-    public ResponseEntity<Response<RefereesOutput>> getAllReferees() {
+    public ResponseEntity<RefereesOutput> getAllReferees() {
         RefereesOutput referees = refereeService.getAllReferees();
-        Response<RefereesOutput> apiResponse = Response.<RefereesOutput>builder().responseObj(referees).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(referees, HttpStatus.OK);
     }
 
     @ApiOperation(value = "getRefereeByMatch", notes = "Gets Referee for a Match")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Referee Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Referee Retrieved Successfully", response = Referee.class)})
     @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
-    public ResponseEntity<Response<Referee>> getRefereeByMatch(@Valid @RequestParam(value = "matchId") Long matchId) {
+    public ResponseEntity<Referee> getRefereeByMatch(@Valid @RequestParam(value = "matchId") Long matchId) {
         Referee referee = refereeService.getRefereeByMatch(matchId);
-        Response<Referee> apiResponse = Response.<Referee>builder().responseObj(referee).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(referee, HttpStatus.OK);
     }
 }

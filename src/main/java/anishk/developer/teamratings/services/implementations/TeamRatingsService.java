@@ -92,7 +92,7 @@ public class TeamRatingsService implements ITeamRatingsService {
 
         if(team != null) {
             logger.debug("Team exists... getting the ratings");
-            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(teamId, startDate, endDate);
+            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(teamId, startDate, endDate);
             List<RatingByMatch> teamRatingsByMatch = new ArrayList<>();
             for (Match match : matches) {
                 teamRatingsByMatch.add(retrieveTeamRatingByMatch(teamId, match));

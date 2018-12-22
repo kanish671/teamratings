@@ -39,7 +39,7 @@ public class MatchService implements IMatchService {
 
     @Override
     public MatchesOutput getAllMatchesByTeamBetweenDates(Integer teamId, Date startDate, Date endDate) {
-        List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(teamId, startDate, endDate);
+        List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(teamId, startDate, endDate);
         return new MatchesOutput(matches);
     }
 

@@ -2,9 +2,7 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.LeaguesOutput;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.ILeagueService;
-import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,13 +28,21 @@ public class LeagueRestController {
         this.leagueService = leagueService;
     }
 
+    @ApiOperation(value = "getAllLeagues", notes = "Gets all Leagues ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Leagues Retrieved Successfully", response = LeaguesOutput.class)})
+    @GetMapping(path = URLPath.GET_ALL)
+    public ResponseEntity<LeaguesOutput> getAllLeagues() {
+        LeaguesOutput leagues= leagueService.getAllLeagues();
+        return new ResponseEntity<>(leagues, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "getAllLeaguesByTeam", notes = "Gets all Leagues for a team ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Leagues Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Leagues Retrieved Successfully", response = LeaguesOutput.class)})
     @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
-    public ResponseEntity<Response<LeaguesOutput>> getAllLeaguesByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
+    public ResponseEntity<LeaguesOutput> getAllLeaguesByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
         LeaguesOutput leagues= leagueService.getAllLeaguesByTeam(teamId);
-        Response<LeaguesOutput> apiResponse = Response.<LeaguesOutput>builder().responseObj(leagues).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(leagues, HttpStatus.OK);
     }
 }

@@ -2,9 +2,8 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
-import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.dto.TeamRatingRequestInput;
-import anishk.developer.teamratings.responses.Response;
+import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.services.interfaces.ITeamRatingsService;
 import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +11,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,40 +36,36 @@ public class TeamRatingsRestController {
 
     @ApiOperation(value = "saveTeamRating", notes = "Submits rating for a team for a match")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Team Rating Saved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Team Rating Saved Successfully", response = String.class)})
+    @ConditionalOnProperty(name = "api.post-enabled", havingValue = "true")
     @PostMapping(path = URLPath.SAVE_RATING)
-    public ResponseEntity<Response<String>> saveTeamRating(@Valid @RequestBody TeamRatingRequestInput teamRatingRequestInput) {
+    public ResponseEntity<String> saveTeamRating(@Valid @RequestBody TeamRatingRequestInput teamRatingRequestInput) {
         validatorUtils.validateTeamRatingRequestInput(teamRatingRequestInput);
         teamRatingsService.saveTeamRating(teamRatingRequestInput);
-        Response<String> apiResponse = Response.<String>builder().responseObj("Team Rating Saved Successfully").build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>("Team Rating Saved Successfully", HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "getTeamRatingByMatch", notes = "Gets average rating for a team for a match")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Team Rating Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Team Rating Retrieved Successfully", response = TeamRatingByMatchOutput.class)})
     @GetMapping(path = URLPath.GET_RATING)
-    public ResponseEntity<Response<TeamRatingByMatchOutput>> getTeamRatingByMatch(@Valid @RequestParam(value = "teamId"
+    public ResponseEntity<TeamRatingByMatchOutput> getTeamRatingByMatch(@Valid @RequestParam(value = "teamId"
     ) Integer teamId, @Valid @RequestParam(value = "matchId") Long matchId) {
         TeamRatingByMatchOutput teamRatingByMatchOutput = teamRatingsService.getTeamRatingByMatch(teamId, matchId);
-        Response<TeamRatingByMatchOutput> apiResponse =
-                Response.<TeamRatingByMatchOutput>builder().responseObj(teamRatingByMatchOutput).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(teamRatingByMatchOutput, HttpStatus.OK);
     }
 
     @ApiOperation(value = "getTeamRatingsBetweenDates", notes = "Gets average ratings of matches for a team between two dates")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Team ratings for the Dates Retrieved Successfully", response =
-                    Response.class)})
+                    TeamRatingsBetweenDatesOutput.class)})
     @GetMapping(path = URLPath.GET_RATINGS_BETWEEN_DATES)
-    public ResponseEntity<Response<TeamRatingsBetweenDatesOutput>> getTeamRatingsBetweenDates(@Valid @RequestParam(value = "teamId"
+    public ResponseEntity<TeamRatingsBetweenDatesOutput> getTeamRatingsBetweenDates(@Valid @RequestParam(value = "teamId"
     ) Integer teamId, @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         validatorUtils.validateStartDateAndEndDate(startDate, endDate);
         TeamRatingsBetweenDatesOutput teamRatingsBetweenDatesOutput =
                 teamRatingsService.getTeamRatingsBetweenDates(teamId, startDate, endDate);
-        Response<TeamRatingsBetweenDatesOutput> apiResponse =
-                Response.<TeamRatingsBetweenDatesOutput>builder().responseObj(teamRatingsBetweenDatesOutput).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(teamRatingsBetweenDatesOutput, HttpStatus.OK);
     }
 }

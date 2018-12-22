@@ -35,6 +35,11 @@ public class LeagueService implements ILeagueService {
     }
 
     @Override
+    public LeaguesOutput getAllLeagues() {
+        return new LeaguesOutput(leaguesRepository.findAll());
+    }
+
+    @Override
     public LeaguesOutput getAllLeaguesByTeam(Integer teamId) {
         List<Integer> leagueIds = matchesRepository.findDistinctLeaguesForTeam(teamId);
         List<League> leagues = new ArrayList<>();

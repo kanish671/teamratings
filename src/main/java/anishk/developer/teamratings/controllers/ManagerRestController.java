@@ -2,10 +2,7 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.ManagersOutput;
-import anishk.developer.teamratings.dto.TeamsOutput;
 import anishk.developer.teamratings.models.Manager;
-import anishk.developer.teamratings.models.Referee;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IManagerService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,21 +31,19 @@ public class ManagerRestController {
 
     @ApiOperation(value = "getAllManagers", notes = "Gets all Managers")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Managers Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Managers Retrieved Successfully", response = ManagersOutput.class)})
     @GetMapping(path = URLPath.GET_ALL)
-    public ResponseEntity<Response<ManagersOutput>> getAllManagers() {
+    public ResponseEntity<ManagersOutput> getAllManagers() {
         ManagersOutput managers = managerService.getAllManagers();
-        Response<ManagersOutput> apiResponse = Response.<ManagersOutput>builder().responseObj(managers).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(managers, HttpStatus.OK);
     }
 
     @ApiOperation(value = "getManagerByTeam", notes = "Gets Manager for a Team")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Manager Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Manager Retrieved Successfully", response = Manager.class)})
     @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
-    public ResponseEntity<Response<Manager>> getManagerByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
+    public ResponseEntity<Manager> getManagerByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
         Manager manager = managerService.getManagerByTeam(teamId);
-        Response<Manager> apiResponse = Response.<Manager>builder().responseObj(manager).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(manager, HttpStatus.OK);
     }
 }

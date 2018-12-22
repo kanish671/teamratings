@@ -2,7 +2,6 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.PlayersOutput;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IPlayerService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -31,11 +30,10 @@ public class PlayerRestController {
 
     @ApiOperation(value = "getAllPlayersByTeam", notes = "Gets all Players for a team ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Players Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Players Retrieved Successfully", response = PlayersOutput.class)})
     @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
-    public ResponseEntity<Response<PlayersOutput>> getAllPlayersByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
+    public ResponseEntity<PlayersOutput> getAllPlayersByTeam(@Valid @RequestParam(value = "teamId") Integer teamId) {
         PlayersOutput players = playerService.getAllPlayersByTeam(teamId);
-        Response<PlayersOutput> apiResponse = Response.<PlayersOutput>builder().responseObj(players).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(players, HttpStatus.OK);
     }
 }

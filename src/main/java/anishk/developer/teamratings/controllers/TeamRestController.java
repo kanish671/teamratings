@@ -2,7 +2,6 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.TeamsOutput;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.ITeamService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = URLPath.BASE_CONTROLLER + URLPath.TEAM)
@@ -28,11 +30,19 @@ public class TeamRestController {
 
     @ApiOperation(value = "getAllTeams", notes = "Gets all Teams")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Teams Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Teams Retrieved Successfully", response = TeamsOutput.class)})
     @GetMapping(path = URLPath.GET_ALL)
-    public ResponseEntity<Response<TeamsOutput>> getAllTeams() {
+    public ResponseEntity<TeamsOutput> getAllTeams() {
         TeamsOutput teams = teamService.getAllTeams();
-        Response<TeamsOutput> apiResponse = Response.<TeamsOutput>builder().responseObj(teams).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(teams, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "getAllTeamsByLeague", notes = "Gets all Teams for a league")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Teams Retrieved Successfully", response = TeamsOutput.class)})
+    @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
+    public ResponseEntity<TeamsOutput> getAllTeamsByLeague(@Valid @RequestParam(value = "leagueId") Integer leagueId) {
+        TeamsOutput teams = teamService.getAllTeamsByLeague(leagueId);
+        return new ResponseEntity<>(teams, HttpStatus.OK);
     }
 }

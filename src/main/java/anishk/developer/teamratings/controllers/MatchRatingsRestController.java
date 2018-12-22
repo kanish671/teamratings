@@ -3,7 +3,6 @@ package anishk.developer.teamratings.controllers;
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.MatchRatingRequestInput;
 import anishk.developer.teamratings.dto.MatchRatingsOutput;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IMatchRatingsService;
 import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +10,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,25 +33,22 @@ public class MatchRatingsRestController {
 
     @ApiOperation(value = "saveMatchRatings", notes = "Saves all ratings for a match")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Match Ratings Saved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Match Ratings Saved Successfully", response = String.class)})
+    @ConditionalOnExpression("${api.post-enabled:true}")
     @PostMapping(path = URLPath.SAVE_RATING)
-    public ResponseEntity<Response<String>> saveMatchRatings(@Valid @RequestBody MatchRatingRequestInput matchRatingRequestInput) {
+    public ResponseEntity<String> saveMatchRatings(@Valid @RequestBody MatchRatingRequestInput matchRatingRequestInput) {
         validatorUtils.validateMatchRatingRequestInput(matchRatingRequestInput);
         matchRatingsService.saveMatchRating(matchRatingRequestInput);
-        Response<String> apiResponse =
-                Response.<String>builder().responseObj("Match Ratings Saved Successfully").build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>("Match Ratings Saved Successfully", HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "getMatchRatings", notes = "Gets all ratings for a match")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Match Ratings Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Match Ratings Retrieved Successfully", response = MatchRatingsOutput.class)})
     @GetMapping(path = URLPath.GET_RATING)
-    public ResponseEntity<Response<MatchRatingsOutput>> getMatchRatings(@Valid @RequestParam(value = "matchId"
+    public ResponseEntity<MatchRatingsOutput> getMatchRatings(@Valid @RequestParam(value = "matchId"
     ) Long matchId) {
         MatchRatingsOutput matchRatingsOutput = matchRatingsService.getMatchRatings(matchId);
-        Response<MatchRatingsOutput> apiResponse =
-                Response.<MatchRatingsOutput>builder().responseObj(matchRatingsOutput).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(matchRatingsOutput, HttpStatus.OK);
     }
 }

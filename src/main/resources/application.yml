@@ -16,7 +16,8 @@ logging:
   level:
     org.springframework: INFO
     org.hibernate: INFO
-
 server:
   port: 8080
   sessionTimeout: 30
+api:
+  post-enabled: false

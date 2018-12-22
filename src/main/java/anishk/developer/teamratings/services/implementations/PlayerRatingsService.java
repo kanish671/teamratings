@@ -88,7 +88,7 @@ public class PlayerRatingsService implements IPlayerRatingsService {
 
         if(player != null) {
             logger.debug("Player exists... getting the ratings");
-            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetween(player.getTeamId(), startDate,
+            List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(player.getTeamId(), startDate,
                     endDate);
             List<RatingByMatch> playerRatingsByMatch = new ArrayList<>();
             for (Match match : matches) {

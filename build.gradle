@@ -34,18 +34,15 @@ repositories {
 
 
 dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.12.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.12.RELEASE'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.0.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: ${springBootVersion}
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: ${springBootVersion}
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: ${springBootVersion}
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
     compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.2.Final'
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
     compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
-    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
-	compile group: 'org.apache.tomcat', name: 'tomcat-catalina', version: '9.0.13'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.12.RELEASE'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: ${springBootVersion}
 }

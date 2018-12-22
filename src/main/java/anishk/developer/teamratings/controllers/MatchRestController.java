@@ -2,7 +2,6 @@ package anishk.developer.teamratings.controllers;
 
 import anishk.developer.teamratings.constants.URLPath;
 import anishk.developer.teamratings.dto.MatchesOutput;
-import anishk.developer.teamratings.responses.Response;
 import anishk.developer.teamratings.services.interfaces.IMatchService;
 import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
@@ -36,25 +35,23 @@ public class MatchRestController {
 
     @ApiOperation(value = "getAllMatchesByTeamBetweenDates", notes = "Gets all Matches for a team between dates")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Matches Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Matches Retrieved Successfully", response = MatchesOutput.class)})
     @GetMapping(path = URLPath.GET_ALL_BETWEEN_DATES)
-    public ResponseEntity<Response<MatchesOutput>> getAllMatchesByTeamBetweenDates(@Valid @RequestParam(value = "teamId")
+    public ResponseEntity<MatchesOutput> getAllMatchesByTeamBetweenDates(@Valid @RequestParam(value = "teamId")
     Integer teamId, @Valid @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
     @Valid @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         validatorUtils.validateStartDateAndEndDate(startDate, endDate);
         MatchesOutput matches = matchService.getAllMatchesByTeamBetweenDates(teamId, startDate, endDate);
-        Response<MatchesOutput> apiResponse = Response.<MatchesOutput>builder().responseObj(matches).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
     @ApiOperation(value = "getAllMatchesByTeamLeagueAndSeason", notes = "Gets matches for team by league and season")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Matches Retrieved Successfully", response = Response.class)})
+            @ApiResponse(code = 200, message = "Matches Retrieved Successfully", response = MatchesOutput.class)})
     @GetMapping(path = URLPath.GET_ALL_BY_FILTERS)
-    public ResponseEntity<Response<MatchesOutput>> getAllMatchesByTeamLeagueAndSeason(@Valid @RequestParam(value = "teamId")
+    public ResponseEntity<MatchesOutput> getAllMatchesByTeamLeagueAndSeason(@Valid @RequestParam(value = "teamId")
     Integer teamId, @Valid @RequestParam(value = "leagueId") Integer leagueId, @Valid @RequestParam(value = "seasonId") Integer seasonId) {
         MatchesOutput matches = matchService.getAllMatchesByTeamLeagueAndSeason(teamId, leagueId, seasonId);
-        Response<MatchesOutput> apiResponse = Response.<MatchesOutput>builder().responseObj(matches).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 }
