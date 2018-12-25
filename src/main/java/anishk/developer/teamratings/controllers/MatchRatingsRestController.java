@@ -8,6 +8,7 @@ import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = URLPath.RATINGS_CONTROLLER + URLPath.MATCH)
+@Slf4j
 public class MatchRatingsRestController {
 
     private IMatchRatingsService matchRatingsService;

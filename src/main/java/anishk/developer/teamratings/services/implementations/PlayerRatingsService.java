@@ -1,15 +1,14 @@
 package anishk.developer.teamratings.services.implementations;
 
 import anishk.developer.teamratings.assembler.Assembler;
-import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.dto.PlayerRatingByMatchOutput;
-import anishk.developer.teamratings.dto.PlayerRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.dto.PlayerRatingRequestInput;
+import anishk.developer.teamratings.dto.PlayerRatingsBetweenDatesOutput;
+import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.IPlayerRatingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service("PlayerRatingsService")
+@Slf4j
 public class PlayerRatingsService implements IPlayerRatingsService {
-
-    private static Logger logger = LoggerFactory.getLogger(PlayerRatingsService.class);
 
     private Assembler assembler;
     private PlayersRepository playersRepository;
@@ -45,7 +43,7 @@ public class PlayerRatingsService implements IPlayerRatingsService {
     @Override
     @Transactional
     public void savePlayerRating(PlayerRatingRequestInput playerRatingRequestInput) {
-        logger.info("Saving rating for playerId: {}, for matchId: {}, with rating: {}",
+        log.info("Saving rating for playerId: {}, for matchId: {}, with rating: {}",
                 playerRatingRequestInput.getPlayerId(),
                 playerRatingRequestInput.getMatchId(),
                 playerRatingRequestInput.getRating());
@@ -54,7 +52,7 @@ public class PlayerRatingsService implements IPlayerRatingsService {
         Match match = matchesRepository.findByMatchId(playerRatingRequestInput.getMatchId());
 
         if(player != null && match != null) {
-            logger.debug("Player and match exist... saving the rating");
+            log.debug("Player and match exist... saving the rating");
             managePlayerRating(playerRatingRequestInput);
         } else {
             throw new IllegalArgumentException("matchId or playerId doesn't match existing data");
@@ -63,13 +61,13 @@ public class PlayerRatingsService implements IPlayerRatingsService {
 
     @Override
     public PlayerRatingByMatchOutput getPlayerRatingByMatch(Long playerId, Long matchId) {
-        logger.info("Getting player rating for playerId: {}, for matchId: {}", playerId, matchId);
+        log.info("Getting player rating for playerId: {}, for matchId: {}", playerId, matchId);
 
         Player player = playersRepository.findByPlayerId(playerId);
         Match match = matchesRepository.findByMatchId(matchId);
 
         if(player != null && match != null) {
-            logger.debug("Player and match exist... getting the rating");
+            log.debug("Player and match exist... getting the rating");
             League league = leaguesRepository.findByLeagueId(match.getLeagueId());
             Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
             return assembler.populatePlayerRatingByMatchOutput(player, match, league, season,
@@ -81,13 +79,13 @@ public class PlayerRatingsService implements IPlayerRatingsService {
 
     @Override
     public PlayerRatingsBetweenDatesOutput getPlayerRatingsBetweenDates(Long playerId, Date startDate, Date endDate) {
-        logger.info("Getting player rating for playerId: {}, between dates startDate: {} and endDate: {}", playerId,
+        log.info("Getting player rating for playerId: {}, between dates startDate: {} and endDate: {}", playerId,
                 startDate, endDate);
 
         Player player = playersRepository.findByPlayerId(playerId);
 
         if(player != null) {
-            logger.debug("Player exists... getting the ratings");
+            log.debug("Player exists... getting the ratings");
             List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(player.getTeamId(), startDate,
                     endDate);
             List<RatingByMatch> playerRatingsByMatch = new ArrayList<>();

@@ -7,6 +7,7 @@ import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping(path = URLPath.BASE_CONTROLLER + URLPath.MATCH)
+@Slf4j
 public class MatchRestController {
 
     private IMatchService matchService;

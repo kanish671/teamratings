@@ -5,8 +5,7 @@ import anishk.developer.teamratings.dto.*;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.IMatchRatingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("MatchRatingsService")
+@Slf4j
 public class MatchRatingsService implements IMatchRatingsService {
-
-    private static Logger logger = LoggerFactory.getLogger(MatchRatingsService.class);
 
     private Assembler assembler;
     private MatchesRepository matchesRepository;
@@ -57,7 +55,7 @@ public class MatchRatingsService implements IMatchRatingsService {
     @Override
     @Transactional
     public void saveMatchRating(MatchRatingRequestInput matchRatingRequestInput) {
-        logger.info("Saving rating for matchId: {}", matchRatingRequestInput.getMatchId());
+        log.info("Saving rating for matchId: {}", matchRatingRequestInput.getMatchId());
 
         teamRatingsService.saveTeamRating(matchRatingRequestInput.getTeamRating());
         managerRatingsService.saveManagerRating(matchRatingRequestInput.getManagerRating());
@@ -69,7 +67,7 @@ public class MatchRatingsService implements IMatchRatingsService {
 
     @Override
     public MatchRatingsOutput getMatchRatings(Long matchId) {
-        logger.info("Getting Match rating information for matchId: {}", matchId);
+        log.info("Getting Match rating information for matchId: {}", matchId);
 
         Match match = matchesRepository.findByMatchId(matchId);
 

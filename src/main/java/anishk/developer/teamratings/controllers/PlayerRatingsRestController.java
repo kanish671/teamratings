@@ -9,6 +9,7 @@ import anishk.developer.teamratings.utils.ValidatorUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -22,6 +23,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping(path = URLPath.RATINGS_CONTROLLER + URLPath.PLAYER)
+@Slf4j
 public class PlayerRatingsRestController {
 
     private IPlayerRatingsService playerRatingsService;

@@ -3,13 +3,12 @@ package anishk.developer.teamratings.services.implementations;
 import anishk.developer.teamratings.assembler.Assembler;
 import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.dto.RefereeRatingByMatchOutput;
-import anishk.developer.teamratings.dto.RefereeRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.dto.RefereeRatingRequestInput;
+import anishk.developer.teamratings.dto.RefereeRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.IRefereeRatingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service("RefereeRatingsService")
-
+@Slf4j
 public class RefereeRatingsService implements IRefereeRatingsService {
-
-    private static Logger logger = LoggerFactory.getLogger(RefereeRatingsService.class);
 
     private Assembler assembler;
     private RefereesRepository refereesRepository;
@@ -46,7 +43,7 @@ public class RefereeRatingsService implements IRefereeRatingsService {
     @Override
     @Transactional
     public void saveRefereeRating(RefereeRatingRequestInput refereeRatingRequestInput) {
-        logger.info("Saving rating for refereeId: {}, for matchId: {}, with rating: {}",
+        log.info("Saving rating for refereeId: {}, for matchId: {}, with rating: {}",
                 refereeRatingRequestInput.getRefereeId(),
                 refereeRatingRequestInput.getMatchId(),
                 refereeRatingRequestInput.getRating());
@@ -55,7 +52,7 @@ public class RefereeRatingsService implements IRefereeRatingsService {
         Match match = matchesRepository.findByMatchId(refereeRatingRequestInput.getMatchId());
 
         if(referee != null && match != null) {
-            logger.debug("Referee and match exist... saving the rating");
+            log.debug("Referee and match exist... saving the rating");
             manageRefereeRating(refereeRatingRequestInput);
         } else {
             throw new IllegalArgumentException("matchId or refereeId doesn't match existing data");
@@ -64,13 +61,13 @@ public class RefereeRatingsService implements IRefereeRatingsService {
 
     @Override
     public RefereeRatingByMatchOutput getRefereeRatingByMatch(Integer refereeId, Long matchId) {
-        logger.info("Getting referee rating for refereeId: {}, for matchId: {}", refereeId, matchId);
+        log.info("Getting referee rating for refereeId: {}, for matchId: {}", refereeId, matchId);
 
         Referee referee = refereesRepository.findByRefereeId(refereeId);
         Match match = matchesRepository.findByMatchId(matchId);
 
         if(referee != null && match != null) {
-            logger.debug("Referee and match exist... getting the rating");
+            log.debug("Referee and match exist... getting the rating");
             League league = leaguesRepository.findByLeagueId(match.getLeagueId());
             Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
             return assembler.populateRefereeRatingByMatchOutput(referee, match, league, season,
@@ -82,13 +79,13 @@ public class RefereeRatingsService implements IRefereeRatingsService {
 
     @Override
     public RefereeRatingsBetweenDatesOutput getRefereeRatingsBetweenDates(Integer refereeId, Date startDate, Date endDate) {
-        logger.info("Getting referee rating for refereeId: {}, between dates startDate: {} and endDate: {}", refereeId,
+        log.info("Getting referee rating for refereeId: {}, between dates startDate: {} and endDate: {}", refereeId,
                 startDate, endDate);
 
         Referee referee = refereesRepository.findByRefereeId(refereeId);
 
         if(referee != null) {
-            logger.debug("Referee exists... getting the ratings");
+            log.debug("Referee exists... getting the ratings");
             List<Match> matches = matchesRepository.findAllByRefereeIdAndFixtureDateBetween(refereeId,
                     startDate, endDate);
             List<RatingByMatch> refereeRatingsByMatch = new ArrayList<>();

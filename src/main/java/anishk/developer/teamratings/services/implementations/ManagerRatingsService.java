@@ -1,12 +1,14 @@
 package anishk.developer.teamratings.services.implementations;
 
 import anishk.developer.teamratings.assembler.Assembler;
-import anishk.developer.teamratings.dto.*;
+import anishk.developer.teamratings.dto.ManagerRatingByMatchOutput;
+import anishk.developer.teamratings.dto.ManagerRatingRequestInput;
+import anishk.developer.teamratings.dto.ManagerRatingsBetweenDatesOutput;
+import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.IManagerRatingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service("ManagerRatingsService")
+@Slf4j
 public class ManagerRatingsService implements IManagerRatingsService {
-    private static Logger logger = LoggerFactory.getLogger(ManagerRatingsService.class);
 
     private Assembler assembler;
     private TeamsRepository teamsRepository;
@@ -44,7 +46,7 @@ public class ManagerRatingsService implements IManagerRatingsService {
     @Override
     @Transactional
     public void saveManagerRating(ManagerRatingRequestInput managerRatingRequestInput) {
-        logger.info("Saving rating for managerId: {}, for matchId: {}, with rating: {}",
+        log.info("Saving rating for managerId: {}, for matchId: {}, with rating: {}",
                 managerRatingRequestInput.getManagerId(),
                 managerRatingRequestInput.getMatchId(),
                 managerRatingRequestInput.getRating());
@@ -53,7 +55,7 @@ public class ManagerRatingsService implements IManagerRatingsService {
         Match match = matchesRepository.findByMatchId(managerRatingRequestInput.getMatchId());
 
         if(manager != null && match != null) {
-            logger.debug("Manager and match exist... saving the rating");
+            log.debug("Manager and match exist... saving the rating");
             manageManagerRating(managerRatingRequestInput);
         } else {
             throw new IllegalArgumentException("matchId or managerId doesn't match existing data");
@@ -62,13 +64,13 @@ public class ManagerRatingsService implements IManagerRatingsService {
 
     @Override
     public ManagerRatingByMatchOutput getManagerRatingByMatch(Integer managerId, Long matchId) {
-        logger.info("Getting team rating for managerId: {}, for matchId: {}", managerId, matchId);
+        log.info("Getting team rating for managerId: {}, for matchId: {}", managerId, matchId);
 
         Manager manager = managersRepository.findByManagerId(managerId);
         Match match = matchesRepository.findByMatchId(matchId);
 
         if(manager != null && match != null) {
-            logger.debug("Manager and match exist... getting the rating");
+            log.debug("Manager and match exist... getting the rating");
             League league = leaguesRepository.findByLeagueId(match.getLeagueId());
             Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
             return assembler.populateManagerRatingByMatchOutput(manager, match, league, season,
@@ -81,14 +83,14 @@ public class ManagerRatingsService implements IManagerRatingsService {
     @Override
     public ManagerRatingsBetweenDatesOutput getManagerRatingsBetweenDates(Integer managerId, Date startDate,
                                                                           Date endDate) {
-        logger.info("Getting team rating for managerId: {}, between dates startDate: {} and endDate: {}", managerId,
+        log.info("Getting team rating for managerId: {}, between dates startDate: {} and endDate: {}", managerId,
                 startDate, endDate);
 
         Manager manager = managersRepository.findByManagerId(managerId);
         Team team = teamsRepository.findByTeamId(manager.getTeamId());
 
         if(manager != null && team != null) {
-            logger.debug("Manager exists... getting the ratings");
+            log.debug("Manager exists... getting the ratings");
             List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(manager.getTeamId(), startDate,
                     endDate);
             List<RatingByMatch> managerRatingsByMatch = new ArrayList<>();

@@ -3,13 +3,12 @@ package anishk.developer.teamratings.services.implementations;
 import anishk.developer.teamratings.assembler.Assembler;
 import anishk.developer.teamratings.dto.RatingByMatch;
 import anishk.developer.teamratings.dto.TeamRatingByMatchOutput;
-import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.dto.TeamRatingRequestInput;
+import anishk.developer.teamratings.dto.TeamRatingsBetweenDatesOutput;
 import anishk.developer.teamratings.models.*;
 import anishk.developer.teamratings.repositories.*;
 import anishk.developer.teamratings.services.interfaces.ITeamRatingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service("TeamRatingsService")
+@Slf4j
 public class TeamRatingsService implements ITeamRatingsService {
-
-    private static Logger logger = LoggerFactory.getLogger(TeamRatingsService.class);
 
     private Assembler assembler;
     private TeamsRepository teamsRepository;
@@ -48,7 +46,7 @@ public class TeamRatingsService implements ITeamRatingsService {
     @Override
     @Transactional
     public void saveTeamRating(TeamRatingRequestInput teamRatingRequestInput) {
-        logger.info("Saving rating for teamId: {}, for matchId: {}, with rating: {}",
+        log.info("Saving rating for teamId: {}, for matchId: {}, with rating: {}",
                 teamRatingRequestInput.getTeamId(),
                 teamRatingRequestInput.getMatchId(),
                 teamRatingRequestInput.getRating());
@@ -57,7 +55,7 @@ public class TeamRatingsService implements ITeamRatingsService {
         Match match = matchesRepository.findByMatchId(teamRatingRequestInput.getMatchId());
 
         if(team != null && match != null) {
-            logger.debug("Team and match exist... saving the rating");
+            log.debug("Team and match exist... saving the rating");
             manageTeamRating(teamRatingRequestInput);
         } else {
             throw new IllegalArgumentException("matchId or teamId doesn't match existing data");
@@ -66,13 +64,13 @@ public class TeamRatingsService implements ITeamRatingsService {
 
     @Override
     public TeamRatingByMatchOutput getTeamRatingByMatch(Integer teamId, Long matchId) {
-        logger.info("Getting team rating for teamId: {}, for matchId: {}", teamId, matchId);
+        log.info("Getting team rating for teamId: {}, for matchId: {}", teamId, matchId);
 
         Team team = teamsRepository.findByTeamId(teamId);
         Match match = matchesRepository.findByMatchId(matchId);
 
         if(team != null && match != null) {
-            logger.debug("Team and match exist... getting the rating");
+            log.debug("Team and match exist... getting the rating");
             League league = leaguesRepository.findByLeagueId(match.getLeagueId());
             Season season = seasonsRepository.findBySeasonId(match.getSeasonId());
             Referee referee = refereesRepository.findByRefereeId(match.getRefereeId());
@@ -85,13 +83,13 @@ public class TeamRatingsService implements ITeamRatingsService {
 
     @Override
     public TeamRatingsBetweenDatesOutput getTeamRatingsBetweenDates(Integer teamId, Date startDate, Date endDate) {
-        logger.info("Getting team rating for teamId: {}, between dates startDate: {} and endDate: {}", teamId,
+        log.info("Getting team rating for teamId: {}, between dates startDate: {} and endDate: {}", teamId,
                 startDate, endDate);
 
         Team team = teamsRepository.findByTeamId(teamId);
 
         if(team != null) {
-            logger.debug("Team exists... getting the ratings");
+            log.debug("Team exists... getting the ratings");
             List<Match> matches = matchesRepository.findAllByTeamIdAndFixtureDateBetweenOrderByFixtureDateAsc(teamId, startDate, endDate);
             List<RatingByMatch> teamRatingsByMatch = new ArrayList<>();
             for (Match match : matches) {

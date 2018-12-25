@@ -8,8 +8,7 @@ import anishk.developer.teamratings.repositories.MatchesRepository;
 import anishk.developer.teamratings.repositories.SeasonsRepository;
 import anishk.developer.teamratings.repositories.TeamsRepository;
 import anishk.developer.teamratings.services.interfaces.ILeagueService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("LeagueService")
+@Slf4j
 public class LeagueService implements ILeagueService {
-
-    private static Logger logger = LoggerFactory.getLogger(LeagueService.class);
 
     private Assembler assembler;
     private TeamsRepository teamsRepository;

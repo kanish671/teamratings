@@ -6,6 +6,7 @@ import anishk.developer.teamratings.services.interfaces.ILeagueService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = URLPath.BASE_CONTROLLER + URLPath.LEAGUE)
+@Slf4j
 public class LeagueRestController {
 
     private ILeagueService leagueService;
